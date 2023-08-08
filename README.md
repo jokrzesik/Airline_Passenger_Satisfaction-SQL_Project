@@ -1,6 +1,9 @@
 # Airline Passenger Satisfaction
 *SQL_Project*
 
+## The Data
+Maven Analytics...
+
 ## Inqueries
 ### Overarching Questions
 - What percentage of passengers are satisfied with their flight experience? 
@@ -11,5 +14,11 @@
 3. What class do passengers traveling for business flying? How does class affect satisfaction?
 4. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?
 5. How does age affect the scores of the various components of satisfaction?
+
+**SQL Commands Used**
+
+SELECT | FROM | COUNT | GROUP BY | AS | CAST | SUM | ORDER BY | CASE WHEN | OVER | AVG | COMMON TABLE EXPRESSION | JOIN | WHERE 
+
+## Insights
 
 ## Takeaways
