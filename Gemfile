@@ -1,1 +1,3 @@
 gem "minima"
+
+$ bundle
