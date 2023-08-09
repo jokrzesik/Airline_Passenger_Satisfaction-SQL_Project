@@ -28,7 +28,11 @@ SELECT | FROM | COUNT | GROUP BY | AS | CAST | SUM | ORDER BY | CASE WHEN | OVER
 **What percentage of passengers are satisfied with their flight experience?**
 
 I began by finding the count and percentage of passengers who were or were not satisfied with their flight.
-*Insert SQL Image*
+'''
+SELECT Satisfaction, COUNT(*) AS Satisfaction_Count, CAST(COUNT(*) as float)*100/SUM(COUNT(*)) OVER() As Satisfaction_Percent
+FROM airline_passenger_satisfaction
+GROUP BY Satisfaction
+'''
 Using the GROUP BY, COUNT, and combination of a few commands, it was revealed that 56,428 (43.45%) of passengers were satisfied, while the remaining 73,452 (56.55%) were neutral or dissatisfied.
 
 **What factors affect satisfaction?**
