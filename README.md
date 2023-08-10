@@ -75,8 +75,39 @@ SELECT Satisfaction,
 FROM airline_passenger_satisfaction
 GROUP BY Satisfaction
 ~~~
+**Table of Satisfaction by Age Group**
+|Satisfaction|Under_18_Count|Under_18_Percent|18-22_Count|18-22_Percent|23-29_Count|23-29_Percent|30-39_Count|30-39_Percent|40-49_Count|40-49_Percent|50-59_Count|50-59_Percent|60-69_Count|60-69_Percent|70-79_Count|70-79_Percent|80_and_over_Count|80_and_over_Percent|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|Neutral or Dissatisfied|8200|83.27409363257846|6129|67.76868642193719|12444|63.92027943291556|15091|58.71070650482415|12437|41.965852341746526|10242|42.735542017858634|7563|72.13161659513591|1248|78.24451410658307|98|72.5925925925926|
+|Satisfied|1647|16.72590636742155|2915|32.2313135780628|7024|36.07972056708444|10613|41.28929349517585|17199|58.034147658253474|13724|57.264457982141366|2922|27.86838340486409|347|21.755485893416928|37|27.40740740740741|
 
-!!!Satisfaction By Age, Flight Distance, Delays, Satisfaction Components 
+The results of the query revealed that the majority of age groups, with the exception of 40-59, were neutral or dissatisfied with their flight.  
+
+A similar set of commands was used to compare Satisfaction with Flight Distance.
+~~~SQL
+SELECT Satisfaction,
+    COUNT(CASE WHEN Flight_Distance < 500 THEN 1 ELSE NULL END) AS Under_500_Count,
+    COUNT(CASE WHEN Flight_Distance < 500 THEN 1 ELSE NULL END)*100/CAST(SUM(COUNT(CASE WHEN Flight_Distance < 500 THEN 1 ELSE NULL END)) OVER () as float) AS Under_500_Percent,
+    COUNT(CASE WHEN Flight_Distance BETWEEN 500 AND 999 THEN 1 ELSE NULL END) AS '500-999_Count',
+    COUNT(CASE WHEN Flight_Distance BETWEEN 500 AND 999 THEN 1 ELSE NULL END)*100/CAST(SUM(COUNT(CASE WHEN Flight_Distance BETWEEN 500 AND 999 THEN 1 ELSE NULL END)) OVER () as float) AS '500-999_Percent',
+    COUNT(CASE WHEN Flight_Distance BETWEEN 1000 AND 1999 THEN 1 ELSE NULL END) AS '1000-1999_Count',
+    COUNT(CASE WHEN Flight_Distance BETWEEN 1000 AND 1999 THEN 1 ELSE NULL END)*100/CAST(SUM(COUNT(CASE WHEN Flight_Distance BETWEEN 1000 AND 1999 THEN 1 ELSE NULL END)) OVER () as float) AS '1000-1999_Percent',
+    COUNT(CASE WHEN Flight_Distance BETWEEN 2000 AND 2999 THEN 1 ELSE NULL END) AS '2000-2999_Count',
+    COUNT(CASE WHEN Flight_Distance BETWEEN 2000 AND 2999 THEN 1 ELSE NULL END)*100/CAST(SUM(COUNT(CASE WHEN Flight_Distance BETWEEN 2000 AND 2999 THEN 1 ELSE NULL END)) OVER () as float) AS '2000-2999_Percent',
+    COUNT(CASE WHEN Flight_Distance >= 3000 THEN 1 ELSE NULL END) AS '3000+_Count',
+    COUNT(CASE WHEN Flight_Distance >= 3000 THEN 1 ELSE NULL END)*100/CAST(SUM(COUNT(CASE WHEN Flight_Distance >= 3000 THEN 1 ELSE NULL END)) OVER () as float) AS '3000+_Percent'
+FROM airline_passenger_satisfaction
+GROUP BY Satisfaction
+~~~
+**Table of Satisfaction by Flight Distance**
+|Satisfaction|Under_500_Count|Under_500_Percent|500-999_Count|500-999_Percent|1000-1999_Count|1000-1999_Percent|2000-2999_Count|2000-2999_Percent|3000+_Count|3000+_Percent|
+|---|---|---|---|---|---|---|---|---|---|---|
+|Neutral or Dissatisfied|26629|66.45288480734678|23630|67.48150898135191|15055|53.94123969903261|5800|35.03684909991543|2338|22.639682385978503|
+|Satisfied|13443|33.54711519265322|11387|32.518491018648085|12855|46.05876030096739|10754|64.96315090008457|7989|77.3603176140215|
+
+This showed how the majority of passengers flying less than 2000 miles were neutral or dissatisfied, while the majority of those flying 2000 or more were satisfied with their experience.
+
+!!!Satisfaction and Delays, Satisfaction Components 
 
 ### A Deeper Dive
 
