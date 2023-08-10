@@ -107,7 +107,41 @@ GROUP BY Satisfaction
 
 This showed how the majority of passengers flying less than 2000 miles were neutral or dissatisfied, while the majority of those flying 2000 or more were satisfied with their experience.
 
-!!!Satisfaction and Delays, Satisfaction Components 
+The next queries compared Satisfaction with Departure and Arrival Delays.  Using `COUNT` and `AVG` paired with a `CASE WHEN` in the `GROUP BY`, I was able to determine find the number of delays and average delay length sorted by satisfaction.  The example below uses Departure Delays.
+~~~SQL
+SELECT Satisfaction,
+    COUNT(*) AS Departure_Delays_Count,
+    AVG(CAST(Departure_Delay AS decimal(10,2))) AS Avg_Departure_Time_Delay
+FROM airline_passenger_satisfaction
+GROUP BY Satisfaction, (CASE WHEN Departure_Delay > 0 THEN 1 ELSE NULL END)
+~~~
+Findings showed that off the satisfied passengers, 21,772 experienced a delay and 34,656 had no delay.  Of the neutral or dissatisfied passengers, 34,962 experienced a delay and 38,490 had no delay. The average delay (factoring out on-time flights) was 32.38 minutes for satisfied passengers and 35.72 for neutral or dissatisfied.  The results for Arrival Delay were similar to that of Departure Delay.
+
+Lastly, I explored the ratings of different satisfaction components by passengers.  This method mostly used the `AVG` command as well as the `GROUP BY` to divide the ratings by Satisfaction.
+~~~SQL
+SELECT Satisfaction,
+    AVG([Departure_and_Arrival_Time_Convenience]+[Ease_of_Online_Booking]+
+    [Check_in_Service]+[Online_Boarding]+[Gate_Location]+[On_board_Service]+[Seat_Comfort]+
+    [Leg_Room_Service]+[Cleanliness]+[Food_and_Drink]+[In_flight_Service]+[In_flight_Wifi_Service]+
+    [In_flight_Entertainment]+[Baggage_Handling])/14 AS Overall_Satisfaction_Score,
+    AVG(CAST([Departure_and_Arrival_Time_Convenience] as decimal(4,2))) as Avg_Dep_and_Arr_Time_Convenience,
+    AVG(CAST([Ease_of_Online_Booking] as decimal(4,2))) AS Avg_Ease_of_Online_Booking,
+    AVG(CAST([Check_in_Service] as decimal(4,2))) AS Avg_Check_in_Service,
+    AVG(CAST([Online_Boarding] as decimal(4,2))) AS Avg_Online_Boarding,
+    AVG(CAST([Gate_Location] as decimal(4,2))) AS Avg_Gate_Location,
+    AVG(CAST([On_board_Service] as decimal(4,2))) AS Avg_On_board_Service,
+    AVG(CAST([Seat_Comfort] as decimal(4,2))) AS Avg_Seat_Comfort,
+    AVG(CAST([Leg_Room_Service] as decimal(4,2))) AS Avg_Leg_Room_Service,
+    AVG(CAST([Cleanliness] as decimal(4,2))) AS Avg_Cleanliness,
+    AVG(CAST([Food_and_Drink] as decimal(4,2))) AS Avg_Food_and_Drink,
+    AVG(CAST([In_flight_Service] as decimal(4,2))) AS Avg_In_flight_Service,
+    AVG(CAST([In_flight_Wifi_Service] as decimal(4,2))) AS Avg_In_flight_Wifi_Service,
+    AVG(CAST([In_flight_Entertainment] as decimal(4,2))) AS Avg_In_flight_Entertainment,
+    AVG(CAST([Baggage_Handling] as decimal(4,2))) AS Avg_Baggage_Handling
+FROM airline_passenger_satisfaction
+GROUP BY Satisfaction
+~~~
+Examinining the created table naturally showed higher ratings for satisfied customers and lower ones for neutral or dissatisfied.  However, a few categories showed more extreme differences.  Online Boarding was rated 2.71 on average by neutral or dissatisfied customers and 4.15 for satisfied.  In Flight Wifi Service was rated 2.40 by neutral or dissatisfied customers and 3.39 by satisfied.  It should also noted that Gate Location was actually scored higher by neutral or dissatisfied customers, but the numbers were nearlly identical (2.98 for neutral or dissatisfied, 2.97 for satisfied).
 
 ### A Deeper Dive
 
