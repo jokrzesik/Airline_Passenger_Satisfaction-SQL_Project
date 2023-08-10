@@ -75,7 +75,7 @@ SELECT Satisfaction,
 FROM airline_passenger_satisfaction
 GROUP BY Satisfaction
 ~~~
-**Table of Satisfaction by Age Group**
+*Table of Satisfaction by Age Group*
 |Satisfaction|Under_18_Count|Under_18_Percent|18-22_Count|18-22_Percent|23-29_Count|23-29_Percent|30-39_Count|30-39_Percent|40-49_Count|40-49_Percent|50-59_Count|50-59_Percent|60-69_Count|60-69_Percent|70-79_Count|70-79_Percent|80_and_over_Count|80_and_over_Percent|
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 |Neutral or Dissatisfied|8200|83.27409363257846|6129|67.76868642193719|12444|63.92027943291556|15091|58.71070650482415|12437|41.965852341746526|10242|42.735542017858634|7563|72.13161659513591|1248|78.24451410658307|98|72.5925925925926|
@@ -99,7 +99,7 @@ SELECT Satisfaction,
 FROM airline_passenger_satisfaction
 GROUP BY Satisfaction
 ~~~
-**Table of Satisfaction by Flight Distance**
+*Table of Satisfaction by Flight Distance*
 |Satisfaction|Under_500_Count|Under_500_Percent|500-999_Count|500-999_Percent|1000-1999_Count|1000-1999_Percent|2000-2999_Count|2000-2999_Percent|3000+_Count|3000+_Percent|
 |---|---|---|---|---|---|---|---|---|---|---|
 |Neutral or Dissatisfied|26629|66.45288480734678|23630|67.48150898135191|15055|53.94123969903261|5800|35.03684909991543|2338|22.639682385978503|
@@ -117,7 +117,7 @@ GROUP BY Satisfaction, (CASE WHEN Departure_Delay > 0 THEN 1 ELSE NULL END)
 ~~~
 Findings showed that off the satisfied passengers, 21,772 experienced a delay and 34,656 had no delay.  Of the neutral or dissatisfied passengers, 34,962 experienced a delay and 38,490 had no delay. The average delay (factoring out on-time flights) was 32.38 minutes for satisfied passengers and 35.72 for neutral or dissatisfied.  The results for Arrival Delay were similar to that of Departure Delay.
 
-Lastly, I explored the ratings of different satisfaction components by passengers.  This method mostly used the `AVG` command as well as the `GROUP BY` to divide the ratings by Satisfaction.
+Lastly, I explored the ratings of different satisfaction components by passengers.  This method mostly used the `AVG` command as well as the `GROUP BY` to divide the ratings by Satisfaction.  Ratings were based on a scale of 0-5, with 0 being not applicable and 5 being the highest.  All 0 ratings were converted to `NULL` to be kept out of calculations.
 ~~~SQL
 SELECT Satisfaction,
     AVG([Departure_and_Arrival_Time_Convenience]+[Ease_of_Online_Booking]+
@@ -141,8 +141,26 @@ SELECT Satisfaction,
 FROM airline_passenger_satisfaction
 GROUP BY Satisfaction
 ~~~
-Examinining the created table naturally showed higher ratings for satisfied customers and lower ones for neutral or dissatisfied.  However, a few categories showed more extreme differences.  Online Boarding was rated 2.71 on average by neutral or dissatisfied customers and 4.15 for satisfied.  In Flight Wifi Service was rated 2.40 by neutral or dissatisfied customers and 3.39 by satisfied.  It should also noted that Gate Location was actually scored higher by neutral or dissatisfied customers, but the numbers were nearlly identical (2.98 for neutral or dissatisfied, 2.97 for satisfied).
+Examinining the created table naturally showed higher ratings for satisfied customers and lower ones for neutral or dissatisfied.  The averages showed that satified customers provided an overall 3.70 rating, while neutral or dissatisfied customers provided an overall 2.97. However, a few categories showed more extreme differences.  Online Boarding was rated 2.71 on average by neutral or dissatisfied customers and 4.15 for satisfied.  In Flight Wifi Service was rated 2.40 by neutral or dissatisfied customers and 3.39 by satisfied.  It should also noted that Gate Location was actually scored higher by neutral or dissatisfied customers, but the numbers were nearlly identical (2.98 for neutral or dissatisfied, 2.97 for satisfied).
 
 ### A Deeper Dive
+After compliting the queries and gaining insight based on my initial questions, I found myself asking some more questions wanting to gain a better understanding of the relationships of the various demographics and satisfaction components. 
+
+**1. Why are first-time passengers mostly neutral or dissatisfied?**
+
+   
+**2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?**
+
+
+**3. What class do passengers traveling for business flying? How does class affect satisfaction?**
+
+
+**4. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?**
+
+
+**5. How does age affect the scores of the various components of satisfaction?**
+
+
+
 
 ## Next Steps & Future Inqueries
