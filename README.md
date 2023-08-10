@@ -141,14 +141,69 @@ SELECT Satisfaction,
 FROM airline_passenger_satisfaction
 GROUP BY Satisfaction
 ~~~
-Examinining the created table naturally showed higher ratings for satisfied customers and lower ones for neutral or dissatisfied.  The averages showed that satified customers provided an overall 3.70 rating, while neutral or dissatisfied customers provided an overall 2.97. However, a few categories showed more extreme differences.  Online Boarding was rated 2.71 on average by neutral or dissatisfied customers and 4.15 for satisfied.  In Flight Wifi Service was rated 2.40 by neutral or dissatisfied customers and 3.39 by satisfied.  It should also noted that Gate Location was actually scored higher by neutral or dissatisfied customers, but the numbers were nearlly identical (2.98 for neutral or dissatisfied, 2.97 for satisfied).
+Examinining the created table naturally showed higher ratings for satisfied customers and lower ones for neutral or dissatisfied.  The averages showed that satified customers provided an overall 3.70 rating, while neutral or dissatisfied customers provided an overall 2.97. However, a few categories showed more extreme differences.  Online Boarding was rated 2.71 on average by neutral or dissatisfied customers and 4.15 for satisfied.  In Flight Wifi Service was rated 2.40 by neutral or dissatisfied customers and 3.39 by satisfied.  It should also noted that while Departure and Arrival Time Convenience as well as Gate Location actually scored higher by neutral or dissatisfied customers, the numbers were fairly close together (3.29 and 3.14 for Convenience; 2.98 and 2.97 for Location).  
 
 ### A Deeper Dive
-After compliting the queries and gaining insight based on my initial questions, I found myself asking some more questions wanting to gain a better understanding of the relationships of the various demographics and satisfaction components. 
+After compliting the queries and gaining insight based on my initial questions, I found myself asking some more questions wanting to gain a better understanding of the relationships of the various demographics and satisfaction components. Below are the futher questions that I explored.
 
-**1. Why are first-time passengers mostly neutral or dissatisfied?**
+**1. Why are first-time passengers mostly neutral or dissatisfied?**  
+To answer this question, I looked at different data comparisons all filtered to First-time passengers.  I began by checking the satisfaction component averages, sorted by satisfaction.
+~~~SQL
+SELECT Customer_Type, Satisfaction,
+    AVG([Departure_and_Arrival_Time_Convenience]+[Ease_of_Online_Booking]+[Check_in_Service]+[Online_Boarding]+[Gate_Location]+[On_board_Service]+[Seat_Comfort]+[Leg_Room_Service]+[Cleanliness]+[Food_and_Drink]+[In_flight_Service]+[In_flight_Wifi_Service]+[In_flight_Entertainment]+[Baggage_Handling])/14 AS Overall_Satisfaction_Score,
+    AVG(CAST([Departure_and_Arrival_Time_Convenience] as decimal(4,2))) AS Avg_Dep_and_Arr_Time_Convenience,
+    AVG(CAST([Ease_of_Online_Booking] as decimal(4,2))) AS Avg_Ease_of_Online_Booking,
+    AVG(CAST([Check_in_Service] as decimal(4,2))) AS Avg_Check_in_Service,
+    AVG(CAST([Online_Boarding] as decimal(4,2))) AS Avg_Online_Boarding,
+    AVG(CAST([Gate_Location] as decimal(4,2))) AS Avg_Gate_Location,
+    AVG(CAST([On_board_Service] as decimal(4,2))) AS Avg_On_board_Service,
+    AVG(CAST([Seat_Comfort] as decimal(4,2))) AS Avg_Seat_Comfort,
+    AVG(CAST([Leg_Room_Service] as decimal(4,2))) AS Avg_Leg_Room_Service,
+    AVG(CAST([Cleanliness] as decimal(4,2))) AS Avg_Cleanliness,
+    AVG(CAST([Food_and_Drink] as decimal(4,2))) AS Avg_Food_and_Drink,
+    AVG(CAST([In_flight_Service] as decimal(4,2))) AS Avg_In_flight_Service,
+    AVG(CAST([In_flight_Wifi_Service] as decimal(4,2))) AS Avg_In_flight_Wifi_Service,
+    AVG(CAST([In_flight_Entertainment] as decimal(4,2))) AS Avg_In_flight_Entertainment,
+    AVG(CAST([Baggage_Handling] as decimal(4,2))) AS Avg_Baggage_Handling
+FROM airline_passenger_satisfaction
+WHERE Customer_Type = 'First-time'
+GROUP BY Satisfaction, Customer_Type
+~~~
+It showed that while the overall average for satisfied and neutral or dissatisfied passengers remained constant, specific components became more polarized.  For example, Departure and Arrival Time Convenience (which was nearly equal between satisfaction groups as a whole) was rated 4.06 by satisfied passenters and 2.61 by neutral or dissatisfied.  Similar effects were observed in Online Boarding and In Flight Wifi Service.
 
-   
+Next, I investigated First-time passengers' satisfaction rates in terms of Departure and Arrival Delay using a similar code to what I used earlier when looking at Delays.
+~~~SQL
+SELECT Type_of_Travel, (CASE WHEN Departure_Delay = 0 THEN 'No Delay' WHEN Departure_Delay > 0 THEN 'Delay' END) AS Flight_Delayed,
+    Satisfaction, COUNT(*) AS Count,
+    AVG(CASE WHEN Departure_Delay > 0 THEN CAST(Departure_Delay AS decimal(10,2)) ELSE NULL END) AS Avg_Departure_Time_Delay
+FROM airline_passenger_satisfaction
+WHERE Type_of_Travel = 'Personal'
+GROUP BY Type_of_Travel, (CASE WHEN Departure_Delay = 0 THEN 'No Delay' WHEN Departure_Delay > 0 THEN 'Delay' END), Satisfaction
+~~~
+While the overall difference in delays for satisfied and neutral or dissatisfied customers was within a few minutes, once filtered for First-time customers, the gap greatly widened to over 12 minutes. This change in difference remained consistent for Arrival Delays as well.
+
+The final examination at First-time passenger experience involved flight distance.  To do this, I required the use of `COMMON TABLE EXPRESSION`, `JOIN`, `WHERE`, `GROUP BY`, and `ORDER BY`.  
+~~~SQL
+WITH
+    temp
+    AS
+    (
+        SELECT ID, (CASE WHEN Flight_Distance <500 THEN 'Under_500_Miles' 
+    WHEN Flight_Distance BETWEEN 500 AND 999 THEN '500-999_Miles'
+    WHEN Flight_Distance BETWEEN 1000 AND 1999 THEN '1000-1999_Miles'
+    WHEN Flight_Distance BETWEEN 2000 AND 2999 THEN '2000-2999_Miles'
+    WHEN Flight_Distance >= 3000 THEN '3000+_Miles' END) AS Flight_Distance_Range
+        FROM airline_passenger_satisfaction
+    )
+SELECT Customer_Type, Satisfaction, temp.Flight_Distance_Range, COUNT(*) AS Count
+FROM airline_passenger_satisfaction
+    JOIN temp
+    ON airline_passenger_satisfaction.ID = temp.ID
+WHERE Customer_Type = 'First-time'
+GROUP BY Customer_Type, Satisfaction, temp.Flight_Distance_Range
+ORDER BY (CASE WHEN temp.Flight_Distance_Range = 'Under_500_Miles' THEN 1 WHEN temp.Flight_Distance_Range = '500-999_Miles' THEN 2 WHEN temp.Flight_Distance_Range = '1000-1999_Miles' THEN 3 WHEN temp.Flight_Distance_Range = '2000-2999_Miles' THEN 4 ELSE 5 END), Satisfaction
+~~~
+This query, however, did not show any unusual patterns, as the ratios of satisfied to neutral or dissatisfied passengers were similar across each age bracket.  
 **2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?**
 
 
