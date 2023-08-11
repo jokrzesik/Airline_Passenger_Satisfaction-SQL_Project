@@ -13,7 +13,7 @@ For this project, I began with a few key questions to answer.  After gaining ins
 ### Specific Questions
 1. Why are first-time passengers mostly neutral or dissatisfied?
 2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?
-3. What class do passengers traveling for business flying? How does class affect satisfaction?
+3. What class are passengers traveling for business flying? How does class affect satisfaction?
 4. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?
 5. How does age affect the scores of the various components of satisfaction?
 
@@ -204,9 +204,11 @@ GROUP BY Customer_Type, Satisfaction, temp.Flight_Distance_Range
 ORDER BY (CASE WHEN temp.Flight_Distance_Range = 'Under_500_Miles' THEN 1 WHEN temp.Flight_Distance_Range = '500-999_Miles' THEN 2 WHEN temp.Flight_Distance_Range = '1000-1999_Miles' THEN 3 WHEN temp.Flight_Distance_Range = '2000-2999_Miles' THEN 4 ELSE 5 END), Satisfaction
 ~~~
 This query, however, did not show any unusual patterns, as the ratios of satisfied to neutral or dissatisfied passengers were similar across each age bracket.    
+
 **2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?**
-My approach to understanding this questions was the same as when examining satifsaction of First-time passengers.  I used the same set of codes, only switching out Customer Type for Type of Travel.  Many of the patterns and insights from First-time passengers' satisfaction held true with those flying for personal reasons.  Nearly all of the ratings of satisfaction components were the same, except for Online Booking, Online Boarding, and In Flight Wifi Service, which all scored much higher for satisfied passengers than neutral or dissatisfied ones.  Regarding delays, neutral or dissatisfied Personal passengers experienced nearly 12 minute longer Departure Delays on average than satisfied passengers; in terms of Arrivals, the difference was over 9 minutes, still far greater than the overall average.  There was no change in satisfaction observed for Personal passengers when accounting for Flight Distance.    
-**3. What class do passengers traveling for business flying? How does class affect satisfaction?**
+My approach to understanding this questions was the same as when examining satifsaction of First-time passengers.  I used the same set of codes, only switching out Customer Type for Type of Travel.  Many of the patterns and insights from First-time passengers' satisfaction held true with those flying for personal reasons.  Nearly all of the ratings of satisfaction components were the same, except for Online Booking, Online Boarding, and In Flight Wifi Service, which all scored much higher for satisfied passengers than neutral or dissatisfied ones.  Regarding delays, neutral or dissatisfied Personal passengers experienced nearly 12 minute longer Departure Delays on average than satisfied passengers; in terms of Arrivals, the difference was over 9 minutes, still far greater than the overall average.  There was no change in satisfaction observed for Personal passengers when accounting for Flight Distance.  
+
+**3. What class are passengers traveling for business flying? How does class affect satisfaction?**
 
 
 **4. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?**
