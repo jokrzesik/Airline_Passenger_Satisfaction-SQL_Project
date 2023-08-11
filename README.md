@@ -180,7 +180,7 @@ FROM airline_passenger_satisfaction
 WHERE Type_of_Travel = 'Personal'
 GROUP BY Type_of_Travel, (CASE WHEN Departure_Delay = 0 THEN 'No Delay' WHEN Departure_Delay > 0 THEN 'Delay' END), Satisfaction
 ~~~
-While the overall difference in delays for satisfied and neutral or dissatisfied customers was within a few minutes, once filtered for First-time customers, the gap greatly widened to over 12 minutes. This change in difference remained consistent for Arrival Delays as well.
+The overall difference in delays for satisfied and neutral or dissatisfied customers was within a few minutes.  When filtered for First-time customers, the gap was a little less than 4 minutes for Departure Delays, and a little over 2 minutes for Arrivals; not much of a change from the overall.
 
 The final examination at First-time passenger experience involved flight distance.  To do this, I required the use of `COMMON TABLE EXPRESSION`, `JOIN`, `WHERE`, `GROUP BY`, and `ORDER BY`.  
 ~~~SQL
@@ -203,10 +203,9 @@ WHERE Customer_Type = 'First-time'
 GROUP BY Customer_Type, Satisfaction, temp.Flight_Distance_Range
 ORDER BY (CASE WHEN temp.Flight_Distance_Range = 'Under_500_Miles' THEN 1 WHEN temp.Flight_Distance_Range = '500-999_Miles' THEN 2 WHEN temp.Flight_Distance_Range = '1000-1999_Miles' THEN 3 WHEN temp.Flight_Distance_Range = '2000-2999_Miles' THEN 4 ELSE 5 END), Satisfaction
 ~~~
-This query, however, did not show any unusual patterns, as the ratios of satisfied to neutral or dissatisfied passengers were similar across each age bracket.  
+This query, however, did not show any unusual patterns, as the ratios of satisfied to neutral or dissatisfied passengers were similar across each age bracket.    
 **2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?**
-
-
+My approach to understanding this questions was the same as when examining satifsaction of First-time passengers.  I used the same set of codes, only switching out Customer Type for Type of Travel.  Many of the patterns and insights from First-time passengers' satisfaction held true with those flying for personal reasons.  Nearly all of the ratings of satisfaction components were the same, except for Online Booking, Online Boarding, and In Flight Wifi Service, which all scored much higher for satisfied passengers than neutral or dissatisfied ones.  Regarding delays, neutral or dissatisfied Personal passengers experienced nearly 12 minute longer Departure Delays on average than satisfied passengers; in terms of Arrivals, the difference was over 9 minutes, still far greater than the overall average.  There was no change in satisfaction observed for Personal passengers when accounting for Flight Distance.    
 **3. What class do passengers traveling for business flying? How does class affect satisfaction?**
 
 
