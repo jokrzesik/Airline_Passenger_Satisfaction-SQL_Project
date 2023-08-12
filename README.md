@@ -14,8 +14,9 @@ For this project, I began with a few key questions to answer.  After gaining ins
 1. Why are first-time passengers mostly neutral or dissatisfied?
 2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?
 3. What class are passengers traveling for business flying? How does class affect satisfaction?
-4. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?
-5. How does age affect the scores of the various components of satisfaction?
+4. What relationship exists between flight class and satisfaction?
+5. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?
+6. How does age affect the scores of the various components of satisfaction?
 
 **SQL Commands Used**
 
@@ -47,7 +48,7 @@ ORDER BY Customer_Type, Satisfaction DESC
 ~~~
 For Returning passengers, 50,728 (47.81%) were satisfied, and 55,372 (52.19%) were neutral or dissatisfied.  Meanwhile, 5,700 (23.97%) First-time passengers were satisfied, and 18,080 (76.03%) were neutral or dissatisfied.
 
-This method was used for other identifiying demographics of passengers: Type of Travel (Business or Personal), Class (Business, Economy, or Economy Plus), and Gender.  Some of the key findings include 36,115 (89.87%) neutral or dissatisfied passengers traveling for personal reasons, and 47,366 (81.23%) of Economy passengers and 7,092 (75.36%) of Economy Plus passengers were neutral or dissatisfied, while only 18,994 (30.56%) of buisiness passengers were neutral or dissatisfied.
+This method was used for other identifiying demographics of passengers: Type of Travel (Business or Personal), Class (Business, Economy, or Economy Plus), and Gender.  Some of the key findings include 36,115 (89.87%) neutral or dissatisfied passengers traveling for personal reasons, and 47,366 (81.23%) of Economy passengers and 7,092 (75.36%) of Economy Plus passengers were neutral or dissatisfied, while only 18,994 (30.56%) of Buisiness Class passengers were neutral or dissatisfied.
 
 To analyze the count and percent of satisfaction by age, I started by using the `COUNT`, `GROUP BY`, and `ORDER BY` commands to learn the age range of passengers and the distribution.  With this information, I created 9 bins to categorize passengers by age.  Passengers aged 30+ and over were sorted into groups of 10 years.  For those younger than 30, three more unique bins were created: Under 18, to cater to traveling minors; 18-22, for college aged flyers; and 23-29, grouping the remaining customers in their 20's.
 
@@ -205,16 +206,26 @@ ORDER BY (CASE WHEN temp.Flight_Distance_Range = 'Under_500_Miles' THEN 1 WHEN t
 ~~~
 This query, however, did not show any unusual patterns, as the ratios of satisfied to neutral or dissatisfied passengers were similar across each age bracket.    
 
-**2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?**
+**2. Why are passengers traveling for personal reasons mostly neutral or dissatisfied?**  
 My approach to understanding this questions was the same as when examining satifsaction of First-time passengers.  I used the same set of codes, only switching out Customer Type for Type of Travel.  Many of the patterns and insights from First-time passengers' satisfaction held true with those flying for personal reasons.  Nearly all of the ratings of satisfaction components were the same, except for Online Booking, Online Boarding, and In Flight Wifi Service, which all scored much higher for satisfied passengers than neutral or dissatisfied ones.  Regarding delays, neutral or dissatisfied Personal passengers experienced nearly 12 minute longer Departure Delays on average than satisfied passengers; in terms of Arrivals, the difference was over 9 minutes, still far greater than the overall average.  There was no change in satisfaction observed for Personal passengers when accounting for Flight Distance.  
+  
+**3. What class are passengers traveling for business flying? How does class affect satisfaction?**  
+Two queries gave insight to these questions.  The first query used `WHERE` to filter for Buisness travelers, `GROUP BY` to sort by class, and `COUNT` to provide number and percentage.
+~~~SQL
+SELECT Type_of_Travel, Class, COUNT(*) Count, COUNT(*)*100/CAST(SUM(COUNT(*)) OVER () as float) AS Percentage
+FROM airline_passenger_satisfaction
+WHERE Type_of_Travel = 'Business'
+GROUP BY Type_of_Travel, Class
+~~~
+The result showed that 66.32% flew Business Class, 28.21% flew Economy, and 5.57% flew Economy Plus.
+I continued by using the same code but adding Satisfaction to the mix.  It revealed that the wide majority of passengers traveling for business seated in business class were satisfied with the experience.  However, the majority of those flying Economy or Economy Plus were neutral or dissatisfied.  These results peaked my interest since as a whole Business travelers were satisfied 58.37% of the time. This led me to ask the next question in my exploration.  
 
-**3. What class are passengers traveling for business flying? How does class affect satisfaction?**
+**4. What relationship exists between flight class and satisfaction?**
+
+**5. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?**
 
 
-**4. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?**
-
-
-**5. How does age affect the scores of the various components of satisfaction?**
+**6. How does age affect the scores of the various components of satisfaction?**
 
 
 
