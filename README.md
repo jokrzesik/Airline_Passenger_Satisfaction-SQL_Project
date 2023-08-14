@@ -218,9 +218,36 @@ WHERE Type_of_Travel = 'Business'
 GROUP BY Type_of_Travel, Class
 ~~~
 The result showed that 66.32% flew Business Class, 28.21% flew Economy, and 5.57% flew Economy Plus.
-I continued by using the same code but adding Satisfaction to the mix.  It revealed that the wide majority of passengers traveling for business seated in business class were satisfied with the experience.  However, the majority of those flying Economy or Economy Plus were neutral or dissatisfied.  These results peaked my interest since as a whole Business travelers were satisfied 58.37% of the time. This led me to ask the next question in my exploration.  
+I continued by using the same code but adding Satisfaction to the mix.  It revealed that the wide majority of passengers traveling for business seated in business class were satisfied with the experience.  However, the majority of those flying Economy or Economy Plus were neutral or dissatisfied.  These results peaked my interest since, as a whole, Business travelers were satisfied 58.37% of the time. This led me to ask the next question in my exploration.  
 
-**4. What relationship exists between flight class and satisfaction?**
+**4. What relationship exists between flight class and satisfaction?**  
+To answer this question, I used three similar codes featuring `AVG`, `WHERE`, `GROUP BY`, and `ORDER BY` to create rows that filtered for Class, separated by Satifsaction and Type of Travel, and sorted by Type of Travel.
+~~~SQL
+SELECT Class, Satisfaction, Type_of_Travel,
+    AVG([Departure_and_Arrival_Time_Convenience]+[Ease_of_Online_Booking]+
+    [Check_in_Service]+[Online_Boarding]+[Gate_Location]+[On_board_Service]+[Seat_Comfort]+
+    [Leg_Room_Service]+[Cleanliness]+[Food_and_Drink]+[In_flight_Service]+[In_flight_Wifi_Service]+
+    [In_flight_Entertainment]+[Baggage_Handling])/14 AS Overall_Satisfaction_Score,
+    AVG(CAST([Departure_and_Arrival_Time_Convenience] as decimal(4,2))) as Avg_Dep_and_Arr_Time_Convenience,
+    AVG(CAST([Ease_of_Online_Booking] as decimal(4,2))) AS Avg_Ease_of_Online_Booking,
+    AVG(CAST([Check_in_Service] as decimal(4,2))) AS Avg_Check_in_Service,
+    AVG(CAST([Online_Boarding] as decimal(4,2))) AS Avg_Online_Boarding,
+    AVG(CAST([Gate_Location] as decimal(4,2))) AS Avg_Gate_Location,
+    AVG(CAST([On_board_Service] as decimal(4,2))) AS Avg_On_board_Service,
+    AVG(CAST([Seat_Comfort] as decimal(4,2))) AS Avg_Seat_Comfort,
+    AVG(CAST([Leg_Room_Service] as decimal(4,2))) AS Avg_Leg_Room_Service,
+    AVG(CAST([Cleanliness] as decimal(4,2))) AS Avg_Cleanliness,
+    AVG(CAST([Food_and_Drink] as decimal(4,2))) AS Avg_Food_and_Drink,
+    AVG(CAST([In_flight_Service] as decimal(4,2))) AS Avg_In_flight_Service,
+    AVG(CAST([In_flight_Wifi_Service] as decimal(4,2))) AS Avg_In_flight_Wifi_Service,
+    AVG(CAST([In_flight_Entertainment] as decimal(4,2))) AS Avg_In_flight_Entertainment,
+    AVG(CAST([Baggage_Handling] as decimal(4,2))) AS Avg_Baggage_Handling
+FROM airline_passenger_satisfaction
+WHERE Class = 'Economy'
+GROUP BY Class, Satisfaction, Type_of_Travel
+ORDER BY Type_of_Travel
+~~~
+Using this query for Economy Class showed that Buisness travelers had lower satisfaction scores than Personal travelers.  In fact Buisness passengers flying Economy who said they were neutral or dissatisfied had an overall survey rating of 2.83, when Personal passengers rated their experience as a 3.11.  Nearly identical numbers where displayed when changing the flight Class to Business or Economy Plus. This told me that although most passengers traveling for Business are satisfied and a wide majority of Personal travelers are dissatisfied, their Satisfaction has a dependency on what Class they fly.  
 
 **5. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?**
 
