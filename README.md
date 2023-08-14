@@ -249,8 +249,43 @@ ORDER BY Type_of_Travel
 ~~~
 Using this query for Economy Class showed that Buisness travelers had lower satisfaction scores than Personal travelers.  In fact Buisness passengers flying Economy who said they were neutral or dissatisfied had an overall survey rating of 2.83, when Personal passengers rated their experience as a 3.11.  Nearly identical numbers where displayed when changing the flight Class to Business or Economy Plus. This told me that although most passengers traveling for Business are satisfied and a wide majority of Personal travelers are dissatisfied, their Satisfaction has a dependency on what Class they fly.  
 
-**5. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?**
-
+**5. The majority of passengers aged from 40-59 are satisfied; why are the majority of passengers in all other age groups are neutral or dissatisfied?**  
+Finding an answer to this question used a single, but more complex query.  I used `COMMON TABLE EXPRESSION` with `JOIN` to create a column of age brackets, and paired it with a `CASE WHEN` in the `ORDER BY` to be able to sort the age brackets appropriately.  
+~~~SQL
+WITH
+    temp
+    AS
+    
+    (
+        SELECT (CASE WHEN Age<18 THEN 'Under_18'
+    WHEN Age BETWEEN 18 AND 22 THEN '18-22'
+    WHEN Age BETWEEN 23 AND 29 THEN '23-29' 
+    WHEN Age BETWEEN 30 AND 39 THEN '30-39' 
+    WHEN Age BETWEEN 40 AND 49 THEN '40-49'
+    WHEN Age BETWEEN 50 AND 59 THEN '50-59'
+    WHEN Age BETWEEN 60 AND 69 THEN '60-69' 
+    WHEN Age BETWEEN 70 AND 79 THEN '70-79'
+    WHEN Age>79 THEN '80_and_over' END) AS Age_Bracket, ID
+        FROM airline_passenger_satisfaction
+    )
+SELECT temp.Age_Bracket, Class, COUNT(*) as Count
+FROM airline_passenger_satisfaction
+    JOIN temp
+    ON temp.ID = airline_passenger_satisfaction.ID
+GROUP BY temp.Age_Bracket, Class
+ORDER BY (
+    CASE WHEN temp.Age_Bracket = 'Under_18' THEN 1
+    WHEN temp.Age_Bracket = '18-22' THEN 2
+    WHEN temp.Age_Bracket = '23-29' THEN 3
+    WHEN temp.Age_Bracket = '30-39' THEN 4
+    WHEN temp.Age_Bracket = '40-49' THEN 5
+    WHEN temp.Age_Bracket = '50-59' THEN 6
+    WHEN temp.Age_Bracket = '60-69' THEN 7
+    WHEN temp.Age_Bracket = '70-79' THEN 8
+    WHEN temp.Age_Bracket = '80_and_over' THEN 9 END), 
+    Class
+~~~
+The result of this query provided an answer that related directly to my last question.
 
 **6. How does age affect the scores of the various components of satisfaction?**
 
