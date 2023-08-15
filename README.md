@@ -285,7 +285,8 @@ ORDER BY (
     WHEN temp.Age_Bracket = '80_and_over' THEN 9 END), 
     Class
 ~~~
-The result of this query provided an answer that related directly to my last question.
+The result of this query provided an answer that related directly to my last question. Most of the passengers within each age bracket flew Economy or Economy Plus.  However, the opposite was true for passengers aged 40-59; the vast majority of those passengers flew Business Class, which, as seen in my previous question, has a high correlation with satisfaction.  (It should be noted that the majority of passengers aged 30-39 also flew Business, however, the split was closer to an even split against Economy and Economy Plus; not enough to counter the high number of neutral or dissatisfied customers).  
+
 
 **6. How does age affect the scores of the various components of satisfaction?**
 
