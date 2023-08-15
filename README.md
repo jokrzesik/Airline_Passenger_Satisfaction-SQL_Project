@@ -287,10 +287,58 @@ ORDER BY (
 ~~~
 The result of this query provided an answer that related directly to my last question. Most of the passengers within each age bracket flew Economy or Economy Plus.  However, the opposite was true for passengers aged 40-59; the vast majority of those passengers flew Business Class, which, as seen in my previous question, has a high correlation with satisfaction.  (It should be noted that the majority of passengers aged 30-39 also flew Business, however, the split was closer to an even split against Economy and Economy Plus; not enough to counter the high number of neutral or dissatisfied customers).  
 
-
-**6. How does age affect the scores of the various components of satisfaction?**
-
-
-
+**6. How does age affect the scores of the various components of satisfaction?**  
+The final question came from my curiosity on if different age brackets prioritized different components of the flight when deciding satisfaction.  For example, would younger passengers have hold more importance for In Flight Wifi, and have resulting scores on the extremes?  The code for this query combined previously used ones, including `COMMON TABLE EXPRESSION`, `AVG`, `CASE WHEN`, `JOIN`, `GROUP BY`, and `ORDER BY`
+~~~SQL
+WITH
+    temp
+    AS
+    (
+        SELECT (CASE WHEN Age<18 THEN 'Under_18'
+    WHEN Age BETWEEN 18 AND 22 THEN '18-22'
+    WHEN Age BETWEEN 23 AND 29 THEN '23-29' 
+    WHEN Age BETWEEN 30 AND 39 THEN '30-39' 
+    WHEN Age BETWEEN 40 AND 49 THEN '40-49'
+    WHEN Age BETWEEN 50 AND 59 THEN '50-59'
+    WHEN Age BETWEEN 60 AND 69 THEN '60-69' 
+    WHEN Age BETWEEN 70 AND 79 THEN '70-79'
+    WHEN Age>79 THEN '80_and_over' END) AS Age_Bracket, ID
+        FROM airline_passenger_satisfaction
+    )
+SELECT temp.Age_Bracket, Satisfaction,
+    AVG([Departure_and_Arrival_Time_Convenience]+[Ease_of_Online_Booking]+
+    [Check_in_Service]+[Online_Boarding]+[Gate_Location]+[On_board_Service]+[Seat_Comfort]+
+    [Leg_Room_Service]+[Cleanliness]+[Food_and_Drink]+[In_flight_Service]+[In_flight_Wifi_Service]+
+    [In_flight_Entertainment]+[Baggage_Handling])/14 AS Overall_Satisfaction_Score,
+    AVG(CAST([Departure_and_Arrival_Time_Convenience] as decimal(4,2))) as Avg_Dep_and_Arr_Time_Convenience,
+    AVG(CAST([Ease_of_Online_Booking] as decimal(4,2))) AS Avg_Ease_of_Online_Booking,
+    AVG(CAST([Check_in_Service] as decimal(4,2))) AS Avg_Check_in_Service,
+    AVG(CAST([Online_Boarding] as decimal(4,2))) AS Avg_Online_Boarding,
+    AVG(CAST([Gate_Location] as decimal(4,2))) AS Avg_Gate_Location,
+    AVG(CAST([On_board_Service] as decimal(4,2))) AS Avg_On_board_Service,
+    AVG(CAST([Seat_Comfort] as decimal(4,2))) AS Avg_Seat_Comfort,
+    AVG(CAST([Leg_Room_Service] as decimal(4,2))) AS Avg_Leg_Room_Service,
+    AVG(CAST([Cleanliness] as decimal(4,2))) AS Avg_Cleanliness,
+    AVG(CAST([Food_and_Drink] as decimal(4,2))) AS Avg_Food_and_Drink,
+    AVG(CAST([In_flight_Service] as decimal(4,2))) AS Avg_In_flight_Service,
+    AVG(CAST([In_flight_Wifi_Service] as decimal(4,2))) AS Avg_In_flight_Wifi_Service,
+    AVG(CAST([In_flight_Entertainment] as decimal(4,2))) AS Avg_In_flight_Entertainment,
+    AVG(CAST([Baggage_Handling] as decimal(4,2))) AS Avg_Baggage_Handling
+FROM airline_passenger_satisfaction
+    JOIN temp
+    ON temp.ID = airline_passenger_satisfaction.ID
+GROUP BY temp.Age_Bracket, Satisfaction
+ORDER BY Satisfaction, (
+    CASE WHEN temp.Age_Bracket = 'Under_18' THEN 1
+    WHEN temp.Age_Bracket = '18-22' THEN 2
+    WHEN temp.Age_Bracket = '23-29' THEN 3
+    WHEN temp.Age_Bracket = '30-39' THEN 4
+    WHEN temp.Age_Bracket = '40-49' THEN 5
+    WHEN temp.Age_Bracket = '50-59' THEN 6
+    WHEN temp.Age_Bracket = '60-69' THEN 7
+    WHEN temp.Age_Bracket = '70-79' THEN 8
+    WHEN temp.Age_Bracket = '80_and_over' THEN 9 END)
+~~~
+The effect of age on satisfaction depended on the component.  Some components by neutral or dissatisfied passengers had similar ratings across the age bracket. For example, the average score for Food and Drink in each age bracket was nearly the same for neutral or dissatisfied customers (within 0.1).  Others such as Online Boarding, Baggage Handling, and On Board Service had more range (over 0.5 between the minimum and maximum).
 
 ## Next Steps & Future Inqueries
