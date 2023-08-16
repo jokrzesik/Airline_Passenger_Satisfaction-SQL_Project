@@ -341,4 +341,10 @@ ORDER BY Satisfaction, (
 ~~~
 The effect of age on satisfaction depended on the component.  Some components by neutral or dissatisfied passengers had similar ratings across the age bracket. For example, the average score for Food and Drink in each age bracket was nearly the same for neutral or dissatisfied customers (within 0.1).  Others such as Online Boarding, Baggage Handling, and On Board Service had more range (over 0.5 between the minimum and maximum).
 
-## Next Steps & Future Inqueries
+## Future Inqueries & Next Steps
+Although I found a number of answers and did some extensive deeper exploration with the data, I kept coming up with new questions about the data.  A few questions I would further pursue in ths project if I continued it:
+- Why are passengers more neutral or dissatisfied on shorter flights? (Under 2000 miles)
+- What are the satisfaction priorities of different customer profiles?
+- A satisfatied rating averages at 3.70, and a neutral or dissatisfied one averages 2.97; what specific areas can be improved to increase the number of satisfied customers, both overall and specific demographics?  
+
+*[Back to Portfolio](*
