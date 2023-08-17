@@ -347,4 +347,4 @@ Although I found a number of answers and did some extensive deeper exploration w
 - What are the satisfaction priorities of different customer profiles?
 - A satisfatied rating averages at 3.70, and a neutral or dissatisfied one averages 2.97; what specific areas can be improved to increase the number of satisfied customers, both overall and specific demographics?  
 
-*[Back to Portfolio](*
+*[Back to John's Portfolio](https://jokrzesik.github.io/John_Okrzesik/)*
