@@ -77,6 +77,7 @@ FROM airline_passenger_satisfaction
 GROUP BY Satisfaction
 ~~~
 *Table of Satisfaction by Age Group*
+
 |Satisfaction|Under_18_Count|Under_18_Percent|18-22_Count|18-22_Percent|23-29_Count|23-29_Percent|30-39_Count|30-39_Percent|40-49_Count|40-49_Percent|50-59_Count|50-59_Percent|60-69_Count|60-69_Percent|70-79_Count|70-79_Percent|80_and_over_Count|80_and_over_Percent|
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 |Neutral or Dissatisfied|8200|83.27409363257846|6129|67.76868642193719|12444|63.92027943291556|15091|58.71070650482415|12437|41.965852341746526|10242|42.735542017858634|7563|72.13161659513591|1248|78.24451410658307|98|72.5925925925926|
@@ -101,6 +102,7 @@ FROM airline_passenger_satisfaction
 GROUP BY Satisfaction
 ~~~
 *Table of Satisfaction by Flight Distance*
+
 |Satisfaction|Under_500_Count|Under_500_Percent|500-999_Count|500-999_Percent|1000-1999_Count|1000-1999_Percent|2000-2999_Count|2000-2999_Percent|3000+_Count|3000+_Percent|
 |---|---|---|---|---|---|---|---|---|---|---|
 |Neutral or Dissatisfied|26629|66.45288480734678|23630|67.48150898135191|15055|53.94123969903261|5800|35.03684909991543|2338|22.639682385978503|
